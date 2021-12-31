@@ -1,4 +1,6 @@
 import asyncio
+import time
+
 import websockets
 import socket, os, struct
 
@@ -21,7 +23,7 @@ async def check_permit(websocket):
 async def recv_msg(websocket):
     fmt = '128si'
     send_buffer = 4096
-    #filepath = input("enter file path:")
+    # filepath = input("enter file path:")
     filepath = "./model_data_face/mobilenet_face_encoding.npy"
     filename = os.path.split(filepath)[1]
     filesize = os.path.getsize(filepath)
@@ -42,17 +44,37 @@ async def recv_msg(websocket):
     await websocket.send(data)
     fd.close()
     print("successfully sent")
-    while True:
-        recv_text = await websocket.recv()
-        response_text = f"your submit context: {recv_text}"
-        await websocket.send(response_text)
+    os.remove(filepath)
+    fmt = '128si'
+    send_buffer = 4096
+    # filepath = input("enter file path:")
+    filepath = "./model_data_face/mobilenet_names.npy"
+    filename = os.path.split(filepath)[1]
+    filesize = os.path.getsize(filepath)
+    print("filename:" + filename + "\nfilesize:" + str(filesize))
+    head = struct.pack(fmt, filename.encode(), filesize)
+    print(r"\nhead size:" + str(head.__len__()) + "\n" + str(head))
+    await websocket.send(head)
+    restSize = filesize
+    fd = open(filepath, 'rb')
+    count = 0
+    while restSize >= send_buffer:
+        data = fd.read(send_buffer)
+        await websocket.send(data)
+        restSize = restSize - send_buffer
+        print(str(count) + " ")
+        count = count + 1
+    data = fd.read(restSize)
+    await websocket.send(data)
+    fd.close()
+    print("successfully sent")
+    os.remove(filepath)
 
 
 # 服务器端主逻辑
 # websocket和path是该函数被回调时自动传过来的，不需要自己传
 async def main_logic(websocket, path):
     await check_permit(websocket)
-
     await recv_msg(websocket)
 
 

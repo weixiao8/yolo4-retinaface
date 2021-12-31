@@ -42,8 +42,7 @@ def ToPush(filename):
     url = "http://njdt.njtjy.org.cn:10032/api/intelligentPrediction/save"
     # base64的encode转码过后是b'开头的bytes类型，需先转换成字符串去掉头尾之后才可以用
     jpgbase64 = "data:image/jpg;base64," + str(ls_f)[2:-1]  # "data:image/jpg;base64,"是java后端解析base64的格式前缀
-    print(jpgbase64)
-    data = {"deviceNo": "MARK-42", "type": "2", "warningNum": "1", "imgBase64": jpgbase64}  # Post请求发送的数据，字典格式
+    data = {"aiDeviceNo": "NJXQLYFZYXGS-002", "type": "2", "warningNum": "1", "imgBase64": jpgbase64}  # Post请求发送的数据，字典格式
     # data需要转化成json才能post
     res = requests.post(url=url, data=json.dumps(data), headers=headers)  # 这里使用post方法，参数和get方法一样
     print(res.text)

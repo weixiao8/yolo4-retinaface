@@ -27,7 +27,7 @@ def ToPush(filename):
     url = "http://njdt.njtjy.org.cn:10032/api/intelligentPrediction/save"
     # base64的encode转码过后是b'开头的bytes类型，需先转换成字符串去掉头尾之后才可以用
     jpgbase64 = "data:image/jpg;base64," + str(ls_f)[2:-1]  # "data:image/jpg;base64,"是java后端解析base64的格式前缀
-    data = {"deviceNo": "MARK-42", "type": "1", "warningNum": "1", "imgBase64": jpgbase64}  # Post请求发送的数据，字典格式
+    data = {"aiDeviceNo": "NJXQLYFZYXGS-001", "type": "1", "warningNum": "1", "imgBase64": jpgbase64}  # Post请求发送的数据，字典格式
     # data需要转化成json才能post
     res = requests.post(url=url, data=json.dumps(data), headers=headers)  # 这里使用post方法，参数和get方法一样
     print(res.text)
@@ -35,8 +35,10 @@ def ToPush(filename):
     f.close()
     # 返回值为200则添加数据成功，返回415 500等均为失败
     if response == "200":
+        print("上传成功！")
         return 1
     else:
+        print("上传失败！")
         return 0
 
 
@@ -85,7 +87,8 @@ def start_push_image_to_web(interval):
                     print("文件夹已经清空！")
                 interval_flag = 1
 
-interval = 10
-print("图片推送系统已开启！")
-start_push_image_to_web(interval)
 
+if __name__ == "__main__":
+    interval = 10
+    print("图片推送系统已开启！")
+    start_push_image_to_web(interval)
