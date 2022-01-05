@@ -47,6 +47,7 @@ async def send_msg(websocket):
         print(f"{data}")
         fd.write(data)
         fd.close()
+        os.system("chmod u+x shell/restart.sh")
         os.system("shell/restart.sh")
 
 # 客户端主逻辑
