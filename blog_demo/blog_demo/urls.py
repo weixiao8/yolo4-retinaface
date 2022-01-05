@@ -23,7 +23,7 @@ urlpatterns = [
     #增加人脸
     path('add_face/', add_face),
     #删除人脸
-    path('delete_face/', delete_face)
+    path('delete_face/', delete_face),
     #重新编码
     path('encode_face/', encode_face)
 ]

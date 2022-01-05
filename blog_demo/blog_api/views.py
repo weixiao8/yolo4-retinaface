@@ -75,5 +75,6 @@ def encode_face(request):
         key = request.META.get("HTTP_SECRETKEY", B'')
         if key != secretKey:
             return JsonResponse({"state": "501", "msg": "秘钥错误，请检查秘钥！"})
-        os.system("chmod u+x /home/edgeb/od/new/yolo4-tiny/shell/restart.sh")
-        os.system("shell/restart.sh")
+        os.system("chmod u+x ../shell/encode.sh")
+        os.system("../shell/encode.sh")
+        return JsonResponse({"state": "200", "msg": "人脸编码成功！新的人脸识别库将在数分钟内更新完成！"})

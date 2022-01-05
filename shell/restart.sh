@@ -4,7 +4,6 @@ echo "old_pid=${old_pid}"
 if [ -z $old_pid ];then
     echo "Process Non-existent !"
     echo "Starting Process...."
-    python3 encoding.py
     cd /home/edgeb/od/yolo4-retinaface/
 
     nohup python3 predict.py >./my.log 2>&1 &
@@ -15,7 +14,6 @@ else
         echo "Process Close Success !"
         echo "Start Restarting....."
         cd /home/edgeb/od/yolo4-retinaface/
-        python3 encoding.py
         nohup python3 predict.py >./my.log 2>&1 &
     else
         echo "Process Close Fail !"
