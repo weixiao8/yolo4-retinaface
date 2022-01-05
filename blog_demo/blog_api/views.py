@@ -33,7 +33,7 @@ def add_face(request):
     if request.method == "POST":
         key = request.META.get("HTTP_SECRETKEY", b'')
         if key != secretKey:
-            return JsonResponse({"state": "404", "msg": "秘钥错误，请检查秘钥！"})
+            return JsonResponse({"state": "501", "msg": "秘钥错误，请检查秘钥！"})
         data = json.loads(request.body)
         name = data["facename"]
         if len(name) < 2 or len(name) > 4:
@@ -50,14 +50,14 @@ def add_face(request):
             return JsonResponse({"state": "200", "msg": "添加人脸成功！"})
         else:
             return JsonResponse({"state": "500", "msg": "添加人脸失败！"})
-
+#python manage.py runserver 10.2.13.4:8000
 
 # 删除人脸
 def delete_face(request):
     if request.method == "DELETE":
         key = request.META.get("HTTP_SECRETKEY", B'')
         if key != secretKey:
-            return JsonResponse({"state": "404", "msg": "秘钥错误，请检查秘钥！"})
+            return JsonResponse({"state": "501", "msg": "秘钥错误，请检查秘钥！"})
         data = json.loads(request.body)
         name = data["facename"]
         if len(name) < 2 or len(name) > 4:
@@ -67,6 +67,13 @@ def delete_face(request):
             os.remove(filename)
             return JsonResponse({"state": "200", "msg": "删除人脸成功！"})
         else:
-            return JsonResponse({"state": "404", "msg": "未找到该人脸！"})
+            return JsonResponse({"state": "500", "msg": "未找到该人脸！"})
 
 # 增删人脸之后需要将整个检测模块重启！
+def encode_face(request):
+    if request.method == "GET":
+        key = request.META.get("HTTP_SECRETKEY", B'')
+        if key != secretKey:
+            return JsonResponse({"state": "501", "msg": "秘钥错误，请检查秘钥！"})
+        os.system("chmod u+x /home/edgeb/od/new/yolo4-tiny/shell/restart.sh")
+        os.system("shell/restart.sh")

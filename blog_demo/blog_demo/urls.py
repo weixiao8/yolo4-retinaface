@@ -16,10 +16,14 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
-from blog_api.views import add_face,delete_face
+from blog_api.views import add_face,delete_face,encode_face
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    #增加人脸
     path('add_face/', add_face),
+    #删除人脸
     path('delete_face/', delete_face)
+    #重新编码
+    path('encode_face/', encode_face)
 ]

@@ -25,50 +25,55 @@ async def recv_msg(websocket):
     send_buffer = 4096
     # filepath = input("enter file path:")
     filepath = "./model_data_face/mobilenet_face_encoding.npy"
-    filename = os.path.split(filepath)[1]
-    filesize = os.path.getsize(filepath)
-    print("filename:" + filename + "\nfilesize:" + str(filesize))
-    head = struct.pack(fmt, filename.encode(), filesize)
-    print(r"\nhead size:" + str(head.__len__()) + "\n" + str(head))
-    await websocket.send(head)
-    restSize = filesize
-    fd = open(filepath, 'rb')
-    count = 0
-    while restSize >= send_buffer:
-        data = fd.read(send_buffer)
+    if os.path.exists(filepath):
+        filename = os.path.split(filepath)[1]
+        filesize = os.path.getsize(filepath)
+        print("filename:" + filename + "\nfilesize:" + str(filesize))
+        head = struct.pack(fmt, filename.encode(), filesize)
+        print(r"\nhead size:" + str(head.__len__()) + "\n" + str(head))
+        await websocket.send(head)
+        restSize = filesize
+        fd = open(filepath, 'rb')
+        count = 0
+        while restSize >= send_buffer:
+            data = fd.read(send_buffer)
+            await websocket.send(data)
+            restSize = restSize - send_buffer
+            print(str(count) + " ")
+            count = count + 1
+        data = fd.read(restSize)
         await websocket.send(data)
-        restSize = restSize - send_buffer
-        print(str(count) + " ")
-        count = count + 1
-    data = fd.read(restSize)
-    await websocket.send(data)
-    fd.close()
-    print("successfully sent")
-    os.remove(filepath)
-    fmt = '128si'
-    send_buffer = 4096
-    # filepath = input("enter file path:")
-    filepath = "./model_data_face/mobilenet_names.npy"
-    filename = os.path.split(filepath)[1]
-    filesize = os.path.getsize(filepath)
-    print("filename:" + filename + "\nfilesize:" + str(filesize))
-    head = struct.pack(fmt, filename.encode(), filesize)
-    print(r"\nhead size:" + str(head.__len__()) + "\n" + str(head))
-    await websocket.send(head)
-    restSize = filesize
-    fd = open(filepath, 'rb')
-    count = 0
-    while restSize >= send_buffer:
-        data = fd.read(send_buffer)
+        fd.close()
+        print("successfully sent")
+        os.remove(filepath)
+
+        fmt = '128si'
+        send_buffer = 4096
+        # filepath = input("enter file path:")
+        filepath = "./model_data_face/mobilenet_names.npy"
+        filename = os.path.split(filepath)[1]
+        filesize = os.path.getsize(filepath)
+        print("filename:" + filename + "\nfilesize:" + str(filesize))
+        head = struct.pack(fmt, filename.encode(), filesize)
+        print(r"\nhead size:" + str(head.__len__()) + "\n" + str(head))
+        await websocket.send(head)
+        restSize = filesize
+        fd = open(filepath, 'rb')
+        count = 0
+        while restSize >= send_buffer:
+            data = fd.read(send_buffer)
+            await websocket.send(data)
+            restSize = restSize - send_buffer
+            print(str(count) + " ")
+            count = count + 1
+        data = fd.read(restSize)
         await websocket.send(data)
-        restSize = restSize - send_buffer
-        print(str(count) + " ")
-        count = count + 1
-    data = fd.read(restSize)
-    await websocket.send(data)
-    fd.close()
-    print("successfully sent")
-    os.remove(filepath)
+        fd.close()
+        print("successfully sent")
+        os.remove(filepath)
+    else:
+        await  websocket.send(struct.pack(fmt, "404".encode(), 0))
+        await  websocket.send(struct.pack(fmt, "404".encode(), 0))
 
 
 # 服务器端主逻辑

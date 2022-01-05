@@ -22,30 +22,34 @@ async def send_msg(websocket):
     filename = struct.unpack(fmt, head)[0].decode().rstrip('\0')
     print(f"{head}")
     print(f"{filename}")
-    filename = './model_data_face/' + "2" + filename
-    print(f"{filename}")
-    fd = open(filename, 'wb')
-    data = await websocket.recv()
-    print(f"{data}")
-    fd.write(data)
-    fd.close()
+    if filename == "404":
+        print("未检测到更新！")
+    else:
+        print("检测到更新！")
+        filename = './model_data_face/' + "2" + filename
+        print(f"{filename}")
+        fd = open(filename, 'wb')
+        data = await websocket.recv()
+        print(f"{data}")
+        fd.write(data)
+        fd.close()
 
-    head = await websocket.recv()
-    filename = struct.unpack(fmt, head)[0].decode().rstrip('\0')
-    print(f"{head}")
-    print(f"{filename}")
-    filename = './model_data_face/' + "2" + filename
-    print(f"{filename}")
-    fd = open(filename, 'wb')
-    data = await websocket.recv()
-    print(f"{data}")
-    fd.write(data)
-    fd.close()
+        head = await websocket.recv()
+        filename = struct.unpack(fmt, head)[0].decode().rstrip('\0')
+        print(f"{head}")
+        print(f"{filename}")
+        filename = './model_data_face/' + "2" + filename
+        print(f"{filename}")
+        fd = open(filename, 'wb')
+        data = await websocket.recv()
+        print(f"{data}")
+        fd.write(data)
+        fd.close()
 
 
 # 客户端主逻辑
 async def main_logic():
-    async with websockets.connect('ws://10.2.13.4:5000') as websocket:
+    async with websockets.connect('ws://192.168.3.2:5000') as websocket:
         await auth_system(websocket)
         await send_msg(websocket)
 
